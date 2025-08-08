@@ -23,7 +23,8 @@ public class UserDaoImp implements UserDao {
     @Override
     @SuppressWarnings("unchecked")
     public List<User> listUsers() {
-        TypedQuery<User> query = sessionFactory.getCurrentSession().createQuery("from User");
+        TypedQuery<User> query = sessionFactory.getCurrentSession()
+                .createQuery("SELECT u FROM User u JOIN FETCH u.car", User.class);
         return query.getResultList();
     }
 
@@ -37,7 +38,8 @@ public class UserDaoImp implements UserDao {
     @Override
     @SuppressWarnings("unchecked")
     public User getUserByCar(String model, int series) {
-        TypedQuery<User> query = sessionFactory.getCurrentSession().createQuery("FROM User user WHERE user.car.model = :model AND user.car.series = :series");
+        TypedQuery<User> query = sessionFactory.getCurrentSession()
+                .createQuery("SELECT u FROM User u JOIN FETCH u.car WHERE u.car.model = :model AND u.car.series = :series", User.class);
         query.setParameter("model", model).setParameter("series", series);
         return query.setMaxResults(1).getSingleResult();
     }
